@@ -3,10 +3,41 @@ import centile.model.Standard
 import centile.model.Gender
 import centile.model.Type
 import java.io.File
+import kotlin.math.pow
 
 fun main() {
     println("Hi Jack!")
-    getCentiles().forEach{ println(it) }
+    findCentile(Gender.BOY, 80, 22.0, 116.0)
+}
+
+fun findCentile(gender: Gender, age: Int, weight: Double, height: Double) {
+    val standards = getCentiles()
+        .filter { it.gender == gender && it.age == age }
+
+    if (standards.isNotEmpty()) {
+        val bmi = weight / (height / 100).pow(2.0)
+        val typeToValue = mapOf(Type.WEIGHT to weight, Type.HEIGHT to height, Type.BMI to bmi)
+
+        typeToValue.forEach { printCentile(it.key, it.value, standards) }
+    } else {
+        println("No data for this age")
+    }
+}
+
+fun printCentile(type: Type, value: Double, standards: List<Standard>) {
+    val standard = standards
+        .filter { it.type == type }
+        .firstOrNull()
+
+    if (standard != null) println("Centile $type: ${getPercentile(standard.centiles, value)}") else println("$type: No data for this age")
+}
+
+fun getPercentile(centiles: List<Centile>, value: Double) : Int {
+    val centile = centiles
+        .filter { it.value <= value }
+        .lastOrNull()
+
+    return if (centile != null) centile.percentile else 1
 }
 
 fun getCentiles(): List<Standard> {
