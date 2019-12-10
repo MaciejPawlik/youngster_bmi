@@ -6,8 +6,17 @@ import java.io.File
 import kotlin.math.pow
 
 fun main() {
-    println("Hi Jack!")
-    findCentile(Gender.BOY, 80, 22.0, 116.0)
+    println("Youngster gender? (Girl / Boy):")
+    // Todo: add inputs check ;)
+    val pickedGender = readLine().toString()
+    val gender = Gender.valueOf(pickedGender.toUpperCase())
+    println("Age(months)?:")
+    val age = readLine()!!.toInt()
+    println("Weight(kg)?:")
+    val weight = readLine()!!.toDouble()
+    println("Height(cm)?:")
+    val height = readLine()!!.toDouble()
+    findCentile(gender, age, weight, height)
 }
 
 fun findCentile(gender: Gender, age: Int, weight: Double, height: Double) {
