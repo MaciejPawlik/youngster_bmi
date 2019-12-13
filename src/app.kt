@@ -34,11 +34,9 @@ fun findCentile(gender: Gender, age: Int, weight: Double, height: Double) {
 }
 
 fun printCentile(type: Type, value: Double, standards: List<Standard>) {
-    val standard = standards
-        .filter { it.type == type }
-        .firstOrNull()
-
-    if (standard != null) println("Centile $type: ${getPercentile(standard.centiles, value)}") else println("$type: No data for this age")
+    val centiles = standards.firstOrNull { it.type == type } ?.centiles
+    val result = centiles?.let { getPercentile(it, value) } ?: "no data for this age"
+    println("Centile $type: $result")
 }
 
 fun getPercentile(centiles: List<Centile>, value: Double) : Int {
@@ -46,7 +44,7 @@ fun getPercentile(centiles: List<Centile>, value: Double) : Int {
         .filter { it.value <= value }
         .lastOrNull()
 
-    return if (centile != null) centile.percentile else 1
+    return centile?.percentile ?: 1
 }
 
 fun getCentiles(): List<Standard> {
